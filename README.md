@@ -4,7 +4,7 @@ Testing several types of wheight scale load cell configurations. Using RPi Pico 
 
 # ToDo:
 
--[ ] adc input using threads
+-[x] adc input using threads
 -[ ] filter results (avg, med, min, max)
 -[ ] calibration (table, save, load)
 
