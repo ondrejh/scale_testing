@@ -20,13 +20,10 @@ class data_thread(threading.Thread):
         with serial.Serial(port=self.port_name, timeout=1.0) as port:
             while not self.stopped:
                 line = port.readline()
-                try:
-                    splt = line.decode('ascii').strip().split(',')
-                    sid = int(splt[0])
-                    sval = int(splt[1])
-                    self.output_function(sid, sval)
-                except:
-                    pass
+                splt = line.decode('ascii').strip().split(',')
+                sid = int(splt[0])
+                sval = int(splt[1])
+                self.output_function(sid, sval)
     def stop(self):
         self.stopped = True
 

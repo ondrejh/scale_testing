@@ -1,0 +1,67 @@
+#!/bin/python3
+
+from data_thread import data_thread
+
+class filter:
+    def __init__(self, flen=64):
+        self.flen = flen
+        self.first = True
+        self.data = [0] * self.flen
+        self.dptr = 0
+        self.dmed = 0
+        self.dmin = 0
+        self.dmax = 0
+        self.davg = 0
+    def put(self, value):
+        #print(value)
+        if self.first:
+            self.first = False
+            for i in range(self.flen):
+                self.data[i] = value
+            self.dmed = self.dmin = self.dmax = self.davg = value
+        else:
+            self.data[self.dptr] = value
+            self.dmin = min(self.data)
+            self.dmax = max(self.data)
+            davg = 0
+            data_med = [0] * self.flen
+            for i in range(self.flen):
+                davg += self.data[i]
+                data_med[i] = self.data[i]
+            davg /= self.flen
+            self.davg = davg
+            data_med.sort()
+            self.dmed = data_med[self.flen // 2]
+            self.dptr += 1
+            if self.dptr >= self.flen:
+                self.dptr = 0
+        return self.davg, self.dmed, self.dmin, self.dmax
+
+data = {}
+#cnts = [0, 0]
+#filters = []
+#filters.append(filter())
+#filters.append(filter())
+
+def data_in(sid, svalue):
+    strid = str(sid)
+    intval = int(svalue)
+    if strid not in data.keys():
+        data[strid] = {}
+        data[strid]['filter'] = filter()
+        data[strid]['counter'] = 0
+    fltr = data[strid]['filter']
+    data[strid]['counter'] += 1
+    davg, dmed, dmin, dmax = fltr.put(intval)
+    if data[strid]['counter'] >= 10:
+        data[strid]['counter'] = 0
+        print(sid, svalue, davg, dmed, dmin, dmax)
+
+def dprint(sid, svalue):
+    print(sid, svalue)
+
+dtt = data_thread(fout=data_in)
+dtt.start()
+
+#print(filters[0].put(1234))
+#print(filters[0].put(4321))
