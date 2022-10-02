@@ -2,6 +2,7 @@
 
 import serial
 import threading
+from time import sleep
 
 PORT = '/dev/ttyACM0'
 
@@ -20,9 +21,13 @@ class data_thread(threading.Thread):
         with serial.Serial(port=self.port_name, timeout=1.0) as port:
             while not self.stopped:
                 line = port.readline()
-                splt = line.decode('ascii').strip().split(',')
-                sid = int(splt[0])
-                sval = int(splt[1])
+                try:
+                    splt = line.decode('ascii').strip().split(',')
+                    sid = int(splt[0])
+                    sval = int(splt[1])
+                except:
+                    sleep(0.1)
+                    continue
                 self.output_function(sid, sval)
     def stop(self):
         self.stopped = True

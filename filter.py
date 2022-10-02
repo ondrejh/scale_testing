@@ -36,12 +36,14 @@ class filter:
             if self.dptr >= self.flen:
                 self.dptr = 0
         return self.davg, self.dmed, self.dmin, self.dmax
+    def reset(self):
+        self.data = [0] * self.flen
+        self.dptr = 0
+        self.first = True
+        self.dmed = self.davg = self.dmin = self.dmax = 0
+
 
 data = {}
-#cnts = [0, 0]
-#filters = []
-#filters.append(filter())
-#filters.append(filter())
 
 def data_in(sid, svalue):
     strid = str(sid)
@@ -60,8 +62,6 @@ def data_in(sid, svalue):
 def dprint(sid, svalue):
     print(sid, svalue)
 
-dtt = data_thread(fout=data_in)
-dtt.start()
-
-#print(filters[0].put(1234))
-#print(filters[0].put(4321))
+if __name__ == "__main__":
+    dtt = data_thread(fout=data_in)
+    dtt.start()
